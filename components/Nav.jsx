@@ -80,7 +80,7 @@ const Nav = () => {
         {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               alt="Promptia logo"
               width={37}
               height={37}
