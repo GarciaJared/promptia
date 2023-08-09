@@ -1,20 +1,28 @@
 "use client";
-import { SignIn, signOut, useSession, getProviders } from "next-auth/react";
+import {
+  SignIn,
+  signOut,
+  useSession,
+  getProviders,
+  signIn,
+} from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const Nav = () => {
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const res = await getProviders();
-      setProviders(res);
-    })();
-  }, []);
+  useEffect(()=>{
+    const setUpProviders = async() =>{
+      const response = await getProviders();
+      setProviders(response)
+    }
+    setUpProviders()
+    //http://localhost:3000/api/auth/callback/google got from authjs doc configurated in api & services Google
+  }, [])
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -28,10 +36,10 @@ const Nav = () => {
         />
         <p className="logo_text">Promptia</p>
       </Link>
-
+      {/* alert(session?.user) */}
       {/* Desktop nav */}
       <div className="sm:flex hidden">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <>
             <div className="flex gap-3 md:gap-5">
               <Link href="/create-prompt" className="black_btn">
@@ -69,7 +77,7 @@ const Nav = () => {
       </div>
       {/* Mobile */}
       <div className="sm.hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
               src="/assets/images/logo.svg"
